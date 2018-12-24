@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LQAB爬虫微服务 1.0</title>
+    <!-- Bootstrap 3.3.6 -->
+    <link rel="stylesheet" href="/statics/plugins/bootstrap/css/bootstrap.min.css"/>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="/statics/plugins/font-awesome/css/font-awesome.min.css"/>
+    <link rel="stylesheet" href="/statics/dist/css/style.css"/>
+
+<style>
+.head .search-input {
+    height: 45px;
+    width: 600px;
+    margin: 0 auto;
+    margin-top: 10px;
+    position: relative;
+}
+
+.head .search-input input {
+    border: 1px solid #e4e4e4;
+    box-sizing: border-box;
+    width: 500px;
+    height: 45px;
+    font-size: 18px;
+    float: left;
+    padding-left: 10px;
+    padding-right: 10px;
+    overflow: hidden;
+}
+
+.head .search-btn {
+    height: 45px;
+    width: 100px;
+    border: 1px solid mediumseagreen;
+    background-color: mediumseagreen;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    float: left;
+}
+
+.head .search-btn {
+    cursor: pointer
+}
+
+.head .search-select {
+    position: absolute;
+    top: 45px;
+    width: 500px;
+    box-sizing: border-box;
+    z-index: 999;
+}
+
+.head .search-select li {
+    border: 1px solid #d4d4d4;
+    ;
+    border-top: none;
+    border-bottom: none;
+    background-color: #fff;
+    width: 100%
+}
+
+.head .search-select-option {
+    box-sizing: border-box;
+    padding: 7px 10px;
+}
+
+.head .selectback {
+    background-color: #eee !important;
+    cursor: pointer
+}
+
+.head input::-ms-clear {
+    display: none
+}
+
+.head .search-reset {
+    width: 21px;
+    height: 21px;
+    position: absolute;
+    display: block;
+    line-height: 21px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 20px;
+    right: 110px;
+    top: 12px
+}
+
+.head .search-select-list {
+    transition: all 0.5s
+}
+
+.head .selectback {
+    background-color: #eee !important;
+    cursor: pointer
+}
+.head .search-select ul{margin:0;text-align: left; }
+
+
+.head ul{list-style: none;padding: 0;margin: 0}
+.head .main-logo {
+    width: 600px;
+    height: 140px;
+    position: relative;
+}
+
+.head .main-logo img {
+    display: block;
+    margin: 0 auto;
+    user-select: none;
+    cursor: pointer;
+}
+
+.head .logoList-arrow {
+    position: absolute;
+    width: 0;
+    height: 0;
+    border: 8px solid;
+    border-color: #000 transparent transparent transparent;
+    right: 100px;
+    top: 66px;
+    cursor: pointer
+}
+
+.head .logoList {
+    position: absolute;
+    top: 100%;
+    width: 200px;
+    left: 50%;
+    margin-left: -100px;
+    z-index: 999999;
+    border: 1px solid #d4d4d4
+}
+
+.head .logoList li {
+    width: 100%;
+    height: 80px;
+    background-color: #FEFEFE; /*少个封号报错*/
+    line-height: 80px;
+    padding-top: 1px;
+}
+
+.head .logoList li img {
+    width: 100%;
+    margin-top: 10px;
+}
+
+.head .logofade-enter-active,
+.head .logofade-leave-active {
+    transition: all  .5s;
+}
+
+.head .logofade-enter,
+.head .logofade-leave-active {
+    opacity: 0;
+    transform: translateY(20px);
+}
+.head .selectback{background-color: #eee !important;cursor: pointer}
+</style>
+</head>
+<body>
+<div id="app_content">
+    <div class="head">
+        <div class="col-xs-8 col-xs-offset-2">
+            <!-- 组件不能写到template的根节点上，即每个组件只有一个根节点，这里的div就是这个template的根节点 -->
+           <!--  getindex是自定义事件 -->
+            <logo-select >
+                <div class="main-logo">
+                    <img src="/statics/img/baidu_logo.png" onclick="toggleFlag()" id="showLogohead" >
+                    <span class="logoList-arrow" onclick="toggleFlag()"></span>
+                    <!-- tranition是vue的过渡效果 -->
+                    <transition name="logofade">
+                        <ul class="logoList">
+
+                        </ul>
+                    </transition>
+                </div>
+            </logo-select>
+            <div class="search-input col-xs-12">
+                <!-- $event是实参，表示event对象 -->
+                <!--
+                    输入搜索内容即时搜索，所以有一个keyup事件。
+                    按回车键有一个进入搜索内容页面，所以有一个keydown.enter事件
+                    按上下键可以选择列表条目
+                -->
+                <div class="form-inline" style="width:824px;">
+                    <div class="form-group">
+                        <input type="text" id="keyword" >
+                        <!-- 这是一个小叉叉，点击它可清除输入框内容 -->
+                      <!--  <div id="search_remove_id"  class="search-reset fa fa-remove" > <i  ></i></div> -->
+
+                        <button class="search-btn btn" id="search_button">搜一下</button>
+                    </div>
+                </div>
+                <div class="search-select col-md-8">
+                <!-- transition-group也是vue2.0中的新特性,tag='ul'表示用ul包裹v-for出来的li -->
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main" style="top:240px;">
+        <div class="col-xs-8 col-xs-offset-2" id="show_context_id">
+            <section class="content"  id="main_context">
+                 <div id="ss" style="display:none;" >
+                    <div class="box ">
+                        <div class="box-body" id="show_table_id">
+                            <div id="table_box" >
+                                <div class="panel-group" id="accordionTable">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <div class="row panel-title ">
+                                                <div class=" panel-title col-lg-11 col-md-10 col-sm-10 col-sm-10">
+                                                    <a data-toggle="collapse" data-parent="#accordionTable" href="#collapseTable" id="table_title_id"> 点击查询 </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div id="collapseTable" class="panel-collapse collapse in">
+                                            <div class="tab-content">
+                                                <div role="tabpanel" class="tab-pane active" id="tab2">
+                                                    <div class="list_d" >
+                                                        <div class="row" >
+                                                            <div class="item" style="display:none;">
+                                                                <div class="item_a row_a">
+                                                                    <div class="item_a_a col_1" style= "color:#3861a4">title </div>
+                                                                    <div class="item_a_b" style="display:none;">
+                                                                        <a class="btn-xs btn_c mr5"><i class="fa fa-heart-o"> 关注 </i> </a>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="item_b row_a" style="display:none;">
+                                                                    <div class="item_b_d"><span class="label label-primary"> 中标  </span> </div>
+                                                                </div>
+                                                                <div class="item_c">summary
+                                                                </div>
+                                                                <div class="item_d">
+                                                                    <span  style= "color:#3861a4">公告日期：2018-04-25</span>
+                                                                </div>
+                                                            </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+</div>
+<center></center>
+<!-- jQuery 2.2.3 -->
+    <script type="text/javascript" src="/statics/plugins/jQuery/jquery.min.js"></script>
+	<!-- Bootstrap 3.3.6 -->
+    <script type="text/javascript" src="/statics/plugins/bootstrap/js/bootstrap.min.js"></script>
+    <!-- bootbox  -->
+    <script type="text/javascript" src="/statics/plugins/jQuery/bootbox.min.js"></script>
+    <!-- 自定义组建  -->
+    <script type="text/javascript" src="/statics/plugins/jQuery/ajax.js"></script>
+	<script type="text/javascript" src="/statics/plugins/jQuery/alert.js"></script>
+    <!-- 自定义脚本 -->
+    <script type="text/javascript" src="/statics/pages/index.js"></script>
+</body>
+</html>
