@@ -127,12 +127,6 @@ dic_config["redis_db"] = 0 #---redis默认数据库编号
 
 # ---- ftp上传参数 ----
 
-dic_config["ftp_hostaddr"] = '162.251.93.27' # ftp地址  
-dic_config["ftp_username"] = 'cn19766' # ftp用户名 
-dic_config["ftp_password"] = 'E252B0BB85cc00' # ftp密码
-dic_config["ftp_port"] = '21' # ftp端口号
-dic_config["ftp_rootdir_local"] = '.' + os.sep + 'statics\\web\\' # ftp本地目录
-dic_config["ftp_remotedir"] = './web' # ftp远程目录
 
 ###config_end###
 
